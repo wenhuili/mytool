@@ -15,7 +15,7 @@ def get_access_token():
     request = urllib.request.Request(host)
     request.add_header("Content-Type", "application/json; charset=UTF-8")
     response = urllib.request.urlopen(request)
-    content = response.read()
+    content = response.read()   # 返回json格式数据
     # print(content)
     if content:
         q = json.loads(content.decode())
@@ -27,16 +27,16 @@ def clipboard():
     """
     从剪贴板获取图片信息
     """
-    image = ImageGrab.grabclipboard()
+    image = ImageGrab.grabclipboard()   # 返回模式为'RGB'的图像或者文件列表
     if image is None:
         print("剪贴板没有图片信息")
         return
     print('image size: %sx%s\n>>>\n' % (image.size[0], image.size[1]))
     b = io.BytesIO()
-    image.save(b, "JPEG")
-    b.seek(0)
+    image.save(b, "JPEG")   # 将image以jpeg格式存在b中
+    b.seek(0)   # 绝对文件定位
     b64 = base64.encodebytes(b.read())
-    access_token = get()
+    access_token = get()    # 获取access_token
     if access_token is not None:
         url = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=%s" % access_token
         data = urllib.parse.urlencode({'image': b64}).encode()
